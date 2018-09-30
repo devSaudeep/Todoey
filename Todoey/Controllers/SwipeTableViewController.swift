@@ -10,16 +10,18 @@ import UIKit
 import SwipeCellKit
 
 class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegate {
-
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         tableView.rowHeight = 80.0
     }
     
     //TableView DataSource Methods
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! SwipeTableViewCell
+        
         cell.delegate = self
+        
         return cell
     }
     
@@ -38,8 +40,11 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
     }
     
     func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
+        
         var options = SwipeOptions()
+        
         options.expansionStyle = .destructive
+        
         return options
     }
     

@@ -11,14 +11,17 @@ import RealmSwift
 import ChameleonFramework
 
 class CategoryTableViewController: SwipeTableViewController {
-    
     let realm = try! Realm()
+    
     var categories: Results<Category>?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        
         loadCategories()
+        
         tableView.separatorStyle = .none
     }
     
@@ -30,11 +33,14 @@ class CategoryTableViewController: SwipeTableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        
         if let category = categories?[indexPath.row] {
             cell.textLabel?.text = category.name
+            
             guard let categoryColour = UIColor(hexString: category.colour) else {
                 fatalError()
             }
+            
             cell.backgroundColor = categoryColour
             cell.textLabel?.textColor = ContrastColorOf(categoryColour, returnFlat: true)
         }
@@ -49,6 +55,7 @@ class CategoryTableViewController: SwipeTableViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let destinationVC = segue.destination as! TodoListViewController
+        
         if let indexPath = tableView.indexPathForSelectedRow {
             destinationVC.selectedCategory = categories?[indexPath.row]
         }
@@ -58,18 +65,24 @@ class CategoryTableViewController: SwipeTableViewController {
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         var textField = UITextField()
+        
         let alert = UIAlertController(title: "Add New Todoey Category", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Add Category", style: .default) { (action) in
             let newCategory = Category()
+            
             newCategory.name = textField.text!
             newCategory.colour = UIColor.randomFlat.hexValue()
+            
             self.save(category: newCategory)
         }
+        
         alert.addTextField { (alertTextField) in
             alertTextField.placeholder = "Create new category"
+            
             textField = alertTextField
         }
         alert.addAction(action)
+        
         present(alert, animated: true, completion: nil)
     }
 
@@ -77,6 +90,7 @@ class CategoryTableViewController: SwipeTableViewController {
     
     func loadCategories() {
         categories = realm.objects(Category.self)
+        
         tableView.reloadData()
     }
     
@@ -88,6 +102,7 @@ class CategoryTableViewController: SwipeTableViewController {
         } catch {
             print("Error saving context \(error)")
         }
+        
         self.tableView.reloadData()
     }
     
